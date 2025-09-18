@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Puls — Credit Report (Demo)</title>
+
+  <!-- Inter -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/style.css"/>
+
+  <!-- PDF libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="container topbar__in">
+      <a class="brand" href="#/home" aria-label="Puls">
+        <img src="/logo.png" alt="Puls" class="brand__logo"/>
+        <span class="brand__title">puls</span>
+      </a>
+      <nav class="nav">
+        <a id="nav-how" href="#/how">How it works</a>
+        <a id="nav-data" href="#/data">Data used</a>
+        <a id="nav-security" href="#/security">Security</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero-band">
+    <section id="view-home" class="container hero">
+      <div class="hero__copy">
+        <h1>Ein klarer, verstehbarer <span class="t-accent">Kredit-Report</span> für Ihr Unternehmen</h1>
+        <p>Geben Sie Ihre Zahlen ein → erhalten Sie Score, erzählerische Zusammenfassung, Säulen-Breakdown und konkrete nächste Schritte.
+          Läuft komplett im Browser.</p>
+        <div class="row">
+          <button class="btn btn-primary" onclick="go('form')">Mit Zahlen starten</button>
+          <a class="btn btn-quiet" href="#/how">So funktioniert's</a>
+        </div>
+      </div>
+
+      <aside class="card demo">
+        <div class="row demo__head">
+          <div class="demo__label">Starke Fundamentals</div>
+          <div class="demo__score" id="demo-score">782</div>
+        </div>
+        <div class="progress"><i style="width:78%"></i></div>
+        <div class="grid kpis">
+          <div class="kpi"><div class="kpi__label">Runway</div><div class="kpi__value">6.7&nbsp;mo</div></div>
+          <div class="kpi"><div class="kpi__label">Margin</div><div class="kpi__value">28%</div></div>
+          <div class="kpi"><div class="kpi__label">Payment issues</div><div class="kpi__value">0 / 12m</div></div>
+          <div class="kpi"><div class="kpi__label">Utilization</div><div class="kpi__value">22%</div></div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <!-- FORM -->
+  <section id="view-form" class="container section hidden">
+    <div class="section__head">
+      <h2>Start with your numbers</h2>
+      <button class="btn btn-ghost" onclick="go('how')">How scoring works →</button>
+    </div>
+
+    <div class="grid cols2">
+      <div class="card">
+        <label>Company name</label><input id="f-companyName" type="text" placeholder="Acme GmbH"/>
+        <label>Legal form</label>
+        <select id="f-legalForm"><option>UG</option><option selected>GmbH</option><option>Einzelunternehmen</option><option>GbR</option></select>
+        <label>Founded (months ago)</label><input id="f-foundedMonthsAgo" type="number"/>
+
+        <div class="grid cols2">
+          <div><label>Monthly revenue (€)</label><input id="f-monthlyRevenue" type="number"/></div>
+          <div><label>Monthly expenses (€)</label><input id="f-monthlyExpenses" type="number"/></div>
+        </div>
+
+        <label>Average bank balance (€)</label><input id="f-avgBankBalance" type="number"/>
+
+        <div class="grid cols2">
+          <div><label>Missed payments (12m)</label><input id="f-missedPaymentsLast12M" type="number"/></div>
+          <div><label>Credit utilization (%)</label><input id="f-creditUtilizationPct" type="number"/></div>
+        </div>
+
+        <div class="grid cols2">
+          <div><label>Active loans</label><input id="f-activeLoans" type="number"/></div>
+          <div><label>Industry</label><input id="f-industry" type="text"/></div>
+        </div>
+
+        <div class="row" style="margin-top:16px">
+          <button class="btn btn-primary" onclick="go('report')">Generate report</button>
+          <button class="btn btn-ghost" onclick="loadExample()">Load example</button>
+        </div>
+      </div>
+
+      <aside class="card">
+        <div class="h3">Live preview</div>
+        <div class="grid preview">
+          <div class="kpi"><div class="kpi__label">Score</div><div class="kpi__value" id="prev-score">—</div></div>
+          <div class="kpi"><div class="kpi__label">Grade</div><div class="kpi__value" id="prev-grade">—</div></div>
+          <div class="kpi"><div class="kpi__label">Runway</div><div class="kpi__value" id="prev-runway">—</div></div>
+          <div class="kpi"><div class="kpi__label">Margin</div><div class="kpi__value" id="prev-margin">—</div></div>
+        </div>
+        <div class="muted" style="margin-top:8px">Strength</div>
+        <div class="progress"><i id="prev-bar" style="width:0%"></i></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section id="view-report" class="container section hidden">
+    <div class="section__head">
+      <button class="btn btn-ghost" onclick="go('form')">← Edit data</button>
+      <button class="btn btn-ghost" id="btn-download-pdf">Download PDF</button>
+    </div>
+
+    <div id="report-area" class="grid">
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <h3 class="h2">Credit Report — Summary</h3>
+            <p class="muted" id="r-intro">—</p>
+          </div>
+          <span class="badge badge-A" id="r-badge">GRADE</span>
+        </div>
+        <div class="grid kpis">
+          <div class="kpi"><div class="kpi__label">Score (0–900)</div><div class="kpi__value" id="r-score">—</div></div>
+          <div class="kpi"><div class="kpi__label">Runway</div><div class="kpi__value" id="r-runway">—</div></div>
+          <div class="kpi"><div class="kpi__label">Profit margin</div><div class="kpi__value" id="r-margin">—</div></div>
+          <div class="kpi"><div class="kpi__label">Utilization</div><div class="kpi__value" id="r-util">—</div></div>
+        </div>
+        <div class="progress"><i id="r-bar" style="width:0%"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="h3">Score breakdown (five pillars)</div>
+        <table class="tbl">
+          <thead><tr><th>Pillar</th><th>Weight</th><th>Sub-score</th><th>Comment</th></tr></thead>
+          <tbody id="r-pillars"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="h3">Financial snapshot</div>
+        <table class="tbl">
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody id="r-snapshot"></tbody>
+        </table>
+      </div>
+
+      <div class="grid cols2">
+        <div class="card">
+          <div class="h3">Risk flags</div>
+          <ul id="r-risks" class="bullets"></ul>
+        </div>
+        <div class="card">
+          <div class="h3">Recommendations</div>
+          <ul id="r-tips" class="bullets"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="h3">Methodology & assumptions</div>
+        <ul class="bullets">
+          <li>Composite score (0–900) across liquidity, profitability, payment history, leverage, company age.</li>
+          <li>Runway = average bank balance ÷ monthly burn (capped at 24m if profitable).</li>
+          <li>Profit margin = (revenue − expenses) ÷ revenue.</li>
+          <li>Demo only. Banking-grade scoring is available in Puls with connected data.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <div class="muted">Prepared for</div>
+            <div id="r-company" class="h3">—</div>
+          </div>
+          <div class="muted">Generated on <span id="r-date">—</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO PAGES -->
+  <section id="view-how" class="container section hidden">
+    <div class="grid blocks">
+      <div class="block"><div class="block__title">Provide inputs</div><div class="block__text">Revenue, expenses, bank balance, company age, missed payments, utilization.</div></div>
+      <div class="block"><div class="block__title">Local scoring</div><div class="block__text">Transparent, rules-based model runs entirely in your browser.</div></div>
+      <div class="block"><div class="block__title">Composite score</div><div class="block__text">0–900 across five pillars with a readable grade and summary.</div></div>
+      <div class="block"><div class="block__title">Actionable report</div><div class="block__text">Pillars, risk flags, and concrete next steps.</div></div>
+      <div class="block"><div class="block__title">Integrate later</div><div class="block__text">In Puls, connect bank feeds for live data, export and sharing.</div></div>
+    </div>
+  </section>
+
+  <section id="view-data" class="container section hidden">
+    <div class="grid blocks">
+      <div class="block"><div class="block__title">Financials</div><div class="block__text">Monthly revenue, Monthly expenses, Average bank balance.</div></div>
+      <div class="block"><div class="block__title">Credit profile</div><div class="block__text">Missed payments (12m), Credit utilization, Active loans.</div></div>
+      <div class="block"><div class="block__title">Context</div><div class="block__text">Legal form, Industry, Company age (months).</div></div>
+      <div class="block"><div class="block__title">Derived</div><div class="block__text">Profit margin, Cash runway, Composite score & grade.</div></div>
+    </div>
+  </section>
+
+  <section id="view-security" class="container section hidden">
+    <div class="grid blocks">
+      <div class="block"><div class="block__title">Local-only demo</div><div class="block__text">All calculations are client-side; no data is transmitted.</div></div>
+      <div class="block"><div class="block__title">Future hardening</div><div class="block__text">TLS in transit, AES-256 at rest, role-based access.</div></div>
+      <div class="block"><div class="block__title">Data minimization</div><div class="block__text">Collect only fields required for scoring.</div></div>
+      <div class="block"><div class="block__title">GDPR-first</div><div class="block__text">Consent, purpose limitation, retention controls.</div></div>
+    </div>
+  </section>
+
+  <footer class="container footer">
+    <div>© <span id="y"></span> Puls. Demo only.</div>
+    <div class="row"><a href="#/imprint">Imprint</a><a href="#/privacy">Privacy</a></div>
+  </footer>
+
+  <!-- App -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
