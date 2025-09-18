@@ -1,14 +1,9 @@
 :root{
-  /* Brand & UI (из твоих палитр) */
-  --p-blue-600: #2266F4;
-  --p-blue-500: #2E91FA;
-  --p-blue-700: #2537EF;
-  --p-green:    #25C585;
-  --p-orange:   #FF6543;
-  --p-yellow:   #FFC442;
-
-  --p-ink:  #0A141E;  /* тёмный текст */
-  --p-ink-2:#09141F;
+  /* Brand palette (from your guide) */
+  --p-blue-600:#2266F4;
+  --p-blue-500:#2E91FA;
+  --p-blue-700:#2537EF;
+  --p-ink:#0A141E;
   --p-gray-700:#717980;
   --p-gray-100:#E8E9EE;
 
@@ -18,58 +13,51 @@
   --text:var(--p-ink);
   --muted:#667085;
 
-  /* Radiuses & shadows (круглые, мягкие) */
+  --brand:var(--p-blue-600);
+  --brand2:var(--p-blue-500);
+
   --r-xl:24px; --r-lg:18px; --r:14px; --r-sm:10px;
   --shadow-lg:0 24px 60px rgba(9,20,31,.12);
   --shadow:0 12px 28px rgba(9,20,31,.08);
-
-  /* Buttons / gradient */
-  --brand: var(--p-blue-600);
-  --brand2: var(--p-blue-500);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0;
-  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color:var(--text); background:var(--bg);
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
 }
 
-/* Layout helpers */
+/* Layout */
 .container{max-width:1240px;margin:0 auto;padding:0 40px}
 .section{padding:48px 0}
 .grid{display:grid;gap:18px}
 .cols2{grid-template-columns:minmax(0,1fr) minmax(340px,400px)}
-.blocks{grid-template-columns:repeat(2,1fr);gap:22px}
-@media (max-width: 1000px){ .cols2,.blocks{grid-template-columns:1fr} }
+@media (max-width:1000px){ .cols2{grid-template-columns:1fr} }
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .hidden{display:none!important}
 
-/* Topbar (как в продукте) */
+/* Topbar */
 .topbar{
   position:sticky; top:0; z-index:50;
-  backdrop-filter: saturate(1.1) blur(10px);
-  background: rgba(255,255,255,.7);
+  backdrop-filter: saturate(1.05) blur(8px);
+  background: rgba(255,255,255,.75);
   border-bottom:1px solid var(--line);
 }
 .topbar__in{height:68px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px}
-.brand__logo{width:28px;height:28px;border-radius:50%}
-.brand__title{font-weight:800;color:var(--p-ink)}
+.brand__logo{width:28px;height:28px;border-radius:50%;display:block}
 .nav a{margin-left:18px;color:#27364a;font-weight:600}
 .nav a:hover,.nav a.active{color:var(--p-blue-600)}
 
-/* Hero band — спокойный градиент */
+/* Hero */
 .hero-band{
-  background:
-    radial-gradient(900px 420px at 80% -20%, rgba(34,102,244,.22), transparent 60%),
-    linear-gradient(135deg, var(--p-blue-600), var(--p-blue-500));
+  background: radial-gradient(900px 420px at 80% -20%, rgba(34,102,244,.22), transparent 60%),
+              linear-gradient(135deg, var(--p-blue-600), var(--p-blue-500));
   color:#fff; border-bottom:1px solid rgba(255,255,255,.18);
 }
 .hero{
-  min-height:72vh; display:grid; grid-template-columns:1.05fr .95fr;
-  gap:32px; align-items:center; padding:56px 0 72px;
+  min-height:72vh; display:grid; grid-template-columns:1.1fr .9fr;
+  gap:36px; align-items:center; padding:64px 0 80px;
 }
 .hero__copy h1{
   margin:0 0 12px; font-weight:800;
@@ -77,56 +65,24 @@ body{
   line-height:1.05; letter-spacing:-.02em;
 }
 .hero__copy p{color:#eaf0ff;font-size:18px;margin:0 0 22px}
-.t-accent{background:linear-gradient(90deg,#fff, #dbe7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 
-/* Cards / KPI */
+/* Cards & KPI */
 .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);padding:22px}
-.kpis{grid-template-columns:repeat(4,1fr)}
+.kpis{display:grid;gap:14px}
+.kpis-4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:900px){ .kpis-4{grid-template-columns:repeat(2,1fr)} }
 .kpi{padding:16px;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--text)}
+.kpi-lg{padding:18px}
 .kpi__label{color:#6b7280;font-size:14px}
 .kpi__value{font-size:22px;font-weight:800}
-
-.demo__head{justify-content:space-between}
-.demo__label{color:#6e7da0;font-weight:700}
-.demo__score{font-weight:800;color:#0b1220}
+.demo__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.demo__title{color:#6e7da0;font-weight:700}
+.demo__score{font-weight:800;color:#0b1220;font-size:24px}
 .progress{height:10px;background:#eef2ff;border-radius:999px;overflow:hidden}
+.progress-lg{height:12px}
 .progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2))}
 
-/* Buttons */
-.btn{padding:14px 20px;border:0;border-radius:14px;font-weight:800;cursor:pointer;letter-spacing:.2px}
-.btn-primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 14px 28px rgba(34,102,244,.35)}
-.btn-quiet{background:#ffffff22;border:1px solid #ffffff55;color:#fff}
-.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
-
-/* Section headers */
-.section__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-h2{font-size:28px;font-weight:800;margin:0;letter-spacing:-.01em}
-.h3{font-size:18px;font-weight:800;margin:0 0 8px}
-.muted{color:#667085;font-size:14px}
-
-/* Inputs */
-label{display:block;font-size:13px;color:#667085;margin:12px 0 6px}
-input[type="number"],input[type="text"],select{
-  width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:16px
-}
-
-/* Tables */
-.tbl{width:100%;border-collapse:collapse;font-size:14px}
-.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left}
-.tbl th{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
-
-/* Info blocks */
-.blocks .block{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:26px}
-.block__title{font-weight:800;font-size:22px;margin:0 0 8px}
-.block__text{font-size:17px;line-height:1.6;color:#334155}
-
-/* Badges */
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800}
-.badge-A{background:#eef2ff;color:#1e3a8a}
-.badge-B{background:#ecfeff;color:#064e3b}
-.badge-C{background:#fff7ed;color:#9a3412}
-.badge-D{background:#fef2f2;color:#991b1b}
-
-/* Footer */
-.footer{color:#7b8bb0;padding:28px 0 40px}
-.footer a{color:var(--p-blue-600)}
+/* Buttons (одинаковый размер шрифта, акцент на primary) */
+.btn{
+  padding:14px 20px;border:0;border-radius:14px;font-weight:800;cursor:pointer;
+  letter-spacing
