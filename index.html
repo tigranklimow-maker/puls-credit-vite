@@ -21,7 +21,7 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="container topbar__in">
-      <!-- Clickable logo only -->
+      <!-- Кликабелен только знак-иконка; внутри кадрируем левую часть PNG -->
       <a class="brand" href="#/home" aria-label="Puls">
         <img src="/logo.png" alt="Puls" class="brand__logo"/>
       </a>
@@ -40,20 +40,20 @@
         <h1>Instant, human-friendly credit report for your business</h1>
         <p>Paste your numbers → get a clear score, narrative summary, pillar breakdown, and concrete next steps. Runs entirely in your browser.</p>
         <div class="row">
-          <button id="btn-start" class="btn btn-primary">Start with your numbers</button>
+          <button id="btn-start" class="btn btn-primary btn-cta">Start with your numbers</button>
           <a class="btn btn-ghost" href="#/how">See how it works</a>
         </div>
       </div>
 
-      <!-- Demo card (more roomy) -->
+      <!-- Demo card (фиксированная, ровная сетка) -->
       <aside class="card demo">
         <div class="demo__head">
           <div class="demo__title">Strong fundamentals</div>
           <div class="demo__score" id="demo-score">782</div>
         </div>
-        <div class="progress progress-lg"><i style="width:78%"></i></div>
+        <div class="progress progress-lg demo__bar"><i style="width:78%"></i></div>
 
-        <div class="kpis kpis-4">
+        <div class="kpis kpis-4 demo__kpis">
           <div class="kpi kpi-lg">
             <div class="kpi__label">Runway</div>
             <div class="kpi__value">6.7&nbsp;mo</div>
