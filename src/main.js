@@ -39,6 +39,7 @@ function computeScore(d){
 const gradeFrom = (t)=> t>=800?"A+": t>=740?"A": t>=680?"B+": t>=620?"B": t>=560?"C+": t>=500?"C":"D";
 const gradeLabel = (g)=>({ "A+":"excellent","A":"very good","B+":"good","B":"fair","C+":"watchlist","C":"weak" }[g]||"high risk");
 
+/* ======= Risks & Tips ======= */
 function riskFlags(d){
   const list=[], m=computeMargin(d), r=computeRunway(d);
   if(m<0.05) list.push("Very thin margin (<5%).");
