@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -21,9 +21,9 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="container topbar__in">
+      <!-- Clickable logo only -->
       <a class="brand" href="#/home" aria-label="Puls">
         <img src="/logo.png" alt="Puls" class="brand__logo"/>
-        <span class="brand__title">puls</span>
       </a>
       <nav class="nav">
         <a id="nav-how" href="#/how">How it works</a>
@@ -37,26 +37,39 @@
   <div class="hero-band">
     <section id="view-home" class="container hero">
       <div class="hero__copy">
-        <h1>Ein klarer, verstehbarer <span class="t-accent">Kredit-Report</span> für Ihr Unternehmen</h1>
-        <p>Geben Sie Ihre Zahlen ein → erhalten Sie Score, erzählerische Zusammenfassung, Säulen-Breakdown und konkrete nächste Schritte.
-          Läuft komplett im Browser.</p>
+        <h1>Instant, human-friendly credit report for your business</h1>
+        <p>Paste your numbers → get a clear score, narrative summary, pillar breakdown, and concrete next steps. Runs entirely in your browser.</p>
         <div class="row">
-          <button class="btn btn-primary" onclick="go('form')">Mit Zahlen starten</button>
-          <a class="btn btn-quiet" href="#/how">So funktioniert's</a>
+          <button id="btn-start" class="btn btn-primary">Start with your numbers</button>
+          <a class="btn btn-ghost" href="#/how">See how it works</a>
         </div>
       </div>
 
+      <!-- Demo card (more roomy) -->
       <aside class="card demo">
-        <div class="row demo__head">
-          <div class="demo__label">Starke Fundamentals</div>
+        <div class="demo__head">
+          <div class="demo__title">Strong fundamentals</div>
           <div class="demo__score" id="demo-score">782</div>
         </div>
-        <div class="progress"><i style="width:78%"></i></div>
-        <div class="grid kpis">
-          <div class="kpi"><div class="kpi__label">Runway</div><div class="kpi__value">6.7&nbsp;mo</div></div>
-          <div class="kpi"><div class="kpi__label">Margin</div><div class="kpi__value">28%</div></div>
-          <div class="kpi"><div class="kpi__label">Payment issues</div><div class="kpi__value">0 / 12m</div></div>
-          <div class="kpi"><div class="kpi__label">Utilization</div><div class="kpi__value">22%</div></div>
+        <div class="progress progress-lg"><i style="width:78%"></i></div>
+
+        <div class="kpis kpis-4">
+          <div class="kpi kpi-lg">
+            <div class="kpi__label">Runway</div>
+            <div class="kpi__value">6.7&nbsp;mo</div>
+          </div>
+          <div class="kpi kpi-lg">
+            <div class="kpi__label">Margin</div>
+            <div class="kpi__value">28%</div>
+          </div>
+          <div class="kpi kpi-lg">
+            <div class="kpi__label">Payment issues</div>
+            <div class="kpi__value">0 / 12m</div>
+          </div>
+          <div class="kpi kpi-lg">
+            <div class="kpi__label">Utilization</div>
+            <div class="kpi__value">22%</div>
+          </div>
         </div>
       </aside>
     </section>
@@ -66,7 +79,7 @@
   <section id="view-form" class="container section hidden">
     <div class="section__head">
       <h2>Start with your numbers</h2>
-      <button class="btn btn-ghost" onclick="go('how')">How scoring works →</button>
+      <a class="btn btn-ghost" href="#/how">How scoring works →</a>
     </div>
 
     <div class="grid cols2">
@@ -94,8 +107,8 @@
         </div>
 
         <div class="row" style="margin-top:16px">
-          <button class="btn btn-primary" onclick="go('report')">Generate report</button>
-          <button class="btn btn-ghost" onclick="loadExample()">Load example</button>
+          <button id="btn-generate" class="btn btn-primary">Generate report</button>
+          <button id="btn-load-example" class="btn btn-quiet">Load example</button>
         </div>
       </div>
 
@@ -116,7 +129,7 @@
   <!-- REPORT -->
   <section id="view-report" class="container section hidden">
     <div class="section__head">
-      <button class="btn btn-ghost" onclick="go('form')">← Edit data</button>
+      <a class="btn btn-ghost" href="#/form">← Edit data</a>
       <button class="btn btn-ghost" id="btn-download-pdf">Download PDF</button>
     </div>
 
@@ -129,7 +142,7 @@
           </div>
           <span class="badge badge-A" id="r-badge">GRADE</span>
         </div>
-        <div class="grid kpis">
+        <div class="kpis kpis-4">
           <div class="kpi"><div class="kpi__label">Score (0–900)</div><div class="kpi__value" id="r-score">—</div></div>
           <div class="kpi"><div class="kpi__label">Runway</div><div class="kpi__value" id="r-runway">—</div></div>
           <div class="kpi"><div class="kpi__label">Profit margin</div><div class="kpi__value" id="r-margin">—</div></div>
