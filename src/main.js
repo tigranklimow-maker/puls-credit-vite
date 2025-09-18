@@ -1,4 +1,4 @@
-/* ---------- State ---------- */
+/* ======= State ======= */
 const S = {
   companyName: "",
   legalForm: "GmbH",
@@ -12,14 +12,14 @@ const S = {
   industry: "Services",
 };
 
-/* ---------- Helpers ---------- */
+/* ======= Utils ======= */
 const $ = (id) => document.getElementById(id);
 const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
-const num = (n) => (Number(n) || 0).toLocaleString("de-DE");
+const num = (n) => (Number(n) || 0).toLocaleString("en-US");
 const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
 const scale  = (v,a,b)=>(v-a)/(b-a);
 
-/* ---------- Scoring ---------- */
+/* ======= Scoring ======= */
 const computeRunway = (d) => {
   const burn = Math.max(0, d.monthlyExpenses - d.monthlyRevenue);
   return burn <= 0 ? 24 : d.avgBankBalance / burn;
@@ -41,26 +41,26 @@ const gradeLabel = (g)=>({ "A+":"excellent","A":"very good","B+":"good","B":"fai
 
 function riskFlags(d){
   const list=[], m=computeMargin(d), r=computeRunway(d);
-  if(m<0.05) list.push("Sehr dünne Marge (<5%).");
-  if(r<2) list.push("Runway unter 2 Monaten.");
-  if(d.missedPaymentsLast12M>=2) list.push("Mehrere Zahlungsverzüge in den letzten 12 Monaten.");
-  if(d.creditUtilizationPct>=70) list.push("Hohe Kreditauslastung (≥70%).");
-  if(d.foundedMonthsAgo<6) list.push("Junges Unternehmen (<6 Monate).");
-  if(!list.length) list.push("Keine kritischen Risiken in den angegebenen Daten erkannt.");
+  if(m<0.05) list.push("Very thin margin (<5%).");
+  if(r<2) list.push("Runway below 2 months.");
+  if(d.missedPaymentsLast12M>=2) list.push("Multiple missed payments in the last 12 months.");
+  if(d.creditUtilizationPct>=70) list.push("High credit utilization (≥70%).");
+  if(d.foundedMonthsAgo<6) list.push("Young company (<6 months).");
+  if(!list.length) list.push("No critical risks detected in the provided inputs.");
   return list;
 }
 function recommendations(d){
   const out=[], m=computeMargin(d), r=computeRunway(d);
-  if(m<0.15) out.push("Marge auf 20%+ heben (Pricing/Kosten).");
-  if(r<3) out.push("Liquidität stärken: 3–6 Monate Runway anstreben.");
-  if(d.missedPaymentsLast12M>0) out.push("12 Monate ohne Zahlungsverzug anpeilen.");
-  if(d.creditUtilizationPct>40) out.push("Kreditauslastung unter 30% senken.");
-  if(d.activeLoans>2) out.push("Kredite bündeln erwägen.");
-  if(!out.length) out.push("Weiter so: gesunde Marge und niedrige Auslastung.");
+  if(m<0.15) out.push("Lift margin to 20%+ (pricing/costs).");
+  if(r<3) out.push("Strengthen liquidity: target 3–6 months runway.");
+  if(d.missedPaymentsLast12M>0) out.push("Aim for 12 months with no missed payments.");
+  if(d.creditUtilizationPct>40) out.push("Reduce utilization below 30%.");
+  if(d.activeLoans>2) out.push("Consider consolidating loans.");
+  if(!out.length) out.push("Stay the course: healthy margin and low utilization.");
   return out;
 }
 
-/* ---------- Form binding ---------- */
+/* ======= Form binding ======= */
 function bindForm(){
   [
     ["f-companyName","companyName",v=>v],
@@ -77,7 +77,17 @@ function bindForm(){
     const el=$(id); if(!el) return;
     el.addEventListener("input",(e)=>{ S[key]=cast(e.target.value); updatePreview(); });
   });
+
+  const btnStart = document.getElementById("btn-start");
+  if (btnStart) btnStart.onclick = () => go("form");
+
+  const btnGen = document.getElementById("btn-generate");
+  if (btnGen) btnGen.onclick = () => go("report");
+
+  const btnLoad = document.getElementById("btn-load-example");
+  if (btnLoad) btnLoad.onclick = loadExample;
 }
+
 function syncInputs(){
   $("f-companyName").value=S.companyName;
   $("f-legalForm").value=S.legalForm;
@@ -99,14 +109,14 @@ function loadExample(){
   syncInputs(); updatePreview();
 }
 
-/* ---------- Preview & Report ---------- */
+/* ======= Preview & Report ======= */
 function updatePreview(){
   const sc=computeScore(S), g=gradeFrom(sc.total);
   set("prev-score", sc.total);
   set("prev-grade", g);
   set("prev-runway", computeRunway(S).toFixed(1)+" mo");
   set("prev-margin", Math.round(computeMargin(S)*100)+"%");
-  $("prev-bar").style.width = Math.min(100, sc.total/9)+"%";
+  const bar = $("prev-bar"); if (bar) bar.style.width = Math.min(100, sc.total/9)+"%";
 }
 
 function renderReport(){
@@ -123,20 +133,20 @@ function renderReport(){
   badge.className="badge "+(g.startsWith("A")?"badge-A":g.startsWith("B")?"badge-B":g.startsWith("C")?"badge-C":"badge-D");
 
   $("r-intro").textContent =
-    `${S.companyName||"Das Unternehmen"} zeigt ${gradeLabel(g)}e Kreditwürdigkeit (Score ${sc.total}, ${g}). `+
-    `Runway ${rw.toFixed(1)} Monate, Marge ${Math.round(m*100)}%. `+
-    (m>=0.15?"Operativ solide.":"Verbesserungspotenzial bei Effizienz.");
+    `${S.companyName||"The company"} shows ${gradeLabel(g)} creditworthiness (Score ${sc.total}, ${g}). `+
+    `Runway ${rw.toFixed(1)} months, margin ${Math.round(m*100)}%. `+
+    (m>=0.15?"Operationally solid.":"Efficiency improvements recommended.");
 
   set("r-company", S.companyName||"—");
   set("r-date", new Date().toLocaleString());
 
   const tb=$("r-pillars"); tb.innerHTML="";
   [
-    ["Liquidity","28%",sc.liquidity, rw>=6?"Komfortabler Runway.":"Runway knapp — Cash erhöhen oder Burn senken."],
-    ["Profitability","27%",sc.profitability, m>=0.15?"Solide Marge.":"Unter 15% — Preise/Kosten prüfen."],
-    ["Payment history","23%",sc.paymentHistory, S.missedPaymentsLast12M===0?"Keine Verzüge.":"Verzüge drücken den Score."],
-    ["Leverage","12%",sc.leverage, S.creditUtilizationPct<=30?"Niedrige Auslastung.":"Hohe Auslastung erhöht Risiko."],
-    ["Company age","10%",sc.age, S.foundedMonthsAgo>=18?"Ausreichende Historie.":"Junge Firma — begrenzter Track-Record."],
+    ["Liquidity","28%",sc.liquidity, rw>=6?"Comfortable runway.":"Tight runway — raise cash or cut burn."],
+    ["Profitability","27%",sc.profitability, m>=0.15?"Solid margin.":"Below 15% — review pricing/costs."],
+    ["Payment history","23%",sc.paymentHistory, S.missedPaymentsLast12M===0?"No missed payments.":"Delays depress score."],
+    ["Leverage","12%",sc.leverage, S.creditUtilizationPct<=30?"Low utilization.":"High utilization elevates risk."],
+    ["Company age","10%",sc.age, S.foundedMonthsAgo>=18?"Sufficient track record.":"Young company — limited history."],
   ].forEach(([p,w,s,c])=>{
     const tr=document.createElement("tr");
     tr.innerHTML=`<td>${p}</td><td>${w}</td><td>${Math.round(s)}</td><td class="muted">${c}</td>`;
@@ -167,7 +177,7 @@ function renderReport(){
   recommendations(S).forEach(t=>{ const li=document.createElement("li"); li.textContent=t; T.appendChild(li); });
 }
 
-/* ---------- Router ---------- */
+/* ======= Router ======= */
 function go(v){ location.hash = "#/"+v; }
 function current(){ const v=(location.hash||"").replace(/^#\/?/,"").split("/")[0]; return ["home","form","report","how","data","security","imprint","privacy"].includes(v)?v:"home"; }
 function show(v){
@@ -180,7 +190,7 @@ function show(v){
 }
 window.addEventListener("hashchange", ()=>show(current()));
 
-/* ---------- PDF ---------- */
+/* ======= PDF ======= */
 function attachPDF(){
   const b=document.getElementById("btn-download-pdf"); if(!b) return;
   b.onclick=()=>{
@@ -192,6 +202,6 @@ function attachPDF(){
   };
 }
 
-/* ---------- Init ---------- */
+/* ======= Init ======= */
 document.getElementById("y").textContent = new Date().getFullYear();
 bindForm(); loadExample(); show(current());
