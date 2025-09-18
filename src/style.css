@@ -85,4 +85,44 @@ body{
 /* Buttons (одинаковый размер шрифта, акцент на primary) */
 .btn{
   padding:14px 20px;border:0;border-radius:14px;font-weight:800;cursor:pointer;
-  letter-spacing
+  letter-spacing:.2px; font-size:15px; line-height:1;
+}
+.btn-primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 14px 28px rgba(34,102,244,.35)}
+.btn-quiet{background:#ffffff22;border:1px solid #ffffff55;color:#fff}
+.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
+
+/* Section headers */
+.section__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+h2{font-size:28px;font-weight:800;margin:0;letter-spacing:-.01em}
+.h2{font-size:24px;font-weight:800;margin:0 0 6px}
+.h3{font-size:18px;font-weight:800;margin:0 0 8px}
+.muted{color:#667085;font-size:14px}
+
+/* Inputs */
+label{display:block;font-size:13px;color:#667085;margin:12px 0 6px}
+input[type="number"],input[type="text"],select{
+  width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:16px
+}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left}
+.tbl th{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
+
+/* Info blocks */
+.blocks{grid-template-columns:repeat(2,1fr);gap:22px}
+@media (max-width:900px){ .blocks{grid-template-columns:1fr} }
+.blocks .block{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:26px}
+.block__title{font-weight:800;font-size:22px;margin:0 0 8px}
+.block__text{font-size:17px;line-height:1.6;color:#334155}
+
+/* Badges */
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800}
+.badge-A{background:#eef2ff;color:#1e3a8a}
+.badge-B{background:#ecfeff;color:#064e3b}
+.badge-C{background:#fff7ed;color:#9a3412}
+.badge-D{background:#fef2f2;color:#991b1b}
+
+/* Footer */
+.footer{color:#7b8bb0;padding:28px 0 40px}
+.footer a{color:var(--p-blue-600)}
